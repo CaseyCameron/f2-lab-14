@@ -2,7 +2,6 @@ import client from '../lib/client.js';
 import supertest from 'supertest';
 import app from '../lib/app.js';
 import { execSync } from 'child_process';
-import { todos } from '../data/todos.js';
 
 const request = supertest(app);
 
@@ -75,7 +74,7 @@ describe('API Routes', () => {
       expect(response.status).toBe(200);
       expect(response.body).toEqual(chore);
     });
-    
+
     it('DELETE /api/todos/:id', async () => {
       //delete specific item
       const response = await request
@@ -83,12 +82,12 @@ describe('API Routes', () => {
         .set('Authorization', user.token);
 
       expect(response.status).toBe(200);
-      expect(response.body).toEqual(chore); 
-      
+      expect(response.body).toEqual(chore);
+
       //make sure it's gone
       const getResponse = await request.get('/api/me/todos')
-      .set('Authorization', user.token);
-      
+        .set('Authorization', user.token);
+
       expect(getResponse.status).toBe(200);
       expect(getResponse.body.find(item => item.id === chore.id)).toBeUndefined();
     });
