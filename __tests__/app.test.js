@@ -64,5 +64,17 @@ describe('API Routes', () => {
       expect(response.body).toEqual([chore]);
     });
 
+    it('PUT /api/todos/:id', async () => {
+      chore.completed = true;
+
+      const response = await request
+        .put(`/api/todos/${chore.id}`)
+        .set('Authorization', user.token)
+        .send(chore);
+
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual(chore);
+    });
+
   });
 });
