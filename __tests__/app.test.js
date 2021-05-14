@@ -33,25 +33,35 @@ describe('API Routes', () => {
 
     // append the token to your requests:
     //  .set('Authorization', user.token);
-    
 
+    let chore = {
+      id: expect.any(Number),
+      task: 'Sweep and mop',
+      completed: false
+    };
 
-    it('POST ', async () => {
-      
-      const response = await request.get('/api/me/todos')
-      .set('Autorization', user.token);
+    it('POST /api/todos', async () => {
+
+      const response = await request
+        .post('/api/todos')
+        .set('Authorization', user.token)
+        .send(chore);
 
       expect(response.status).toBe(200);
-      expect(response.body).toEqual(todos);   
+      expect(response.body).toEqual({
+        userId: user.id,
+        ...chore
+      });
+      chore = response.body;
     });
 
     it('GET /api/me/todos', async () => {
-      
+
       const response = await request.get('/api/me/todos')
-      .set('Autorization', user.token);
+        .set('Authorization', user.token);
 
       expect(response.status).toBe(200);
-      expect(response.body).toEqual(todos);   
+      expect(response.body).toEqual([chore]);
     });
 
   });
