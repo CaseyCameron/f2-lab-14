@@ -1,5 +1,5 @@
 // example seed data
-const todos = [
+export const todos = [
   {
     task: 'Wash the dishes',
     completed: false,
@@ -13,5 +13,3 @@ const todos = [
     completed: false,
   }
 ];
-
-export default todos;

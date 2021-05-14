@@ -2,7 +2,7 @@
 import client from '../lib/client.js';
 // import our seed data:
 import users from './users.js';
-import todos from './todos.js';
+import { todos } from './todos.js';
 
 run();
 

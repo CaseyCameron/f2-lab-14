@@ -2,6 +2,7 @@ import client from '../lib/client.js';
 import supertest from 'supertest';
 import app from '../lib/app.js';
 import { execSync } from 'child_process';
+import { todos } from '../data/todos.js';
 
 const request = supertest(app);
 
@@ -11,7 +12,7 @@ describe('API Routes', () => {
     return client.end();
   });
 
-  describe('/api/cats', () => {
+  describe('/api/todos', () => {
     let user;
 
     beforeAll(async () => {
@@ -33,14 +34,24 @@ describe('API Routes', () => {
     // append the token to your requests:
     //  .set('Authorization', user.token);
     
-    it('VERB to /api/route [with context]', async () => {
+
+
+    it('POST ', async () => {
       
-      // remove this line, here to not have lint error:
-      user.token;
-    
-      // expect(response.status).toBe(200);
-      // expect(response.body).toEqual(?);
+      const response = await request.get('/api/me/todos')
+      .set('Autorization', user.token);
+
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual(todos);   
+    });
+
+    it('GET /api/me/todos', async () => {
       
+      const response = await request.get('/api/me/todos')
+      .set('Autorization', user.token);
+
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual(todos);   
     });
 
   });
