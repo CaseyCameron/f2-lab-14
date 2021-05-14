@@ -11,7 +11,7 @@ describe('API Routes', () => {
     return client.end();
   });
 
-  describe('/api/cats', () => {
+  describe('/api/todos', () => {
     let user;
 
     beforeAll(async () => {
@@ -32,15 +32,64 @@ describe('API Routes', () => {
 
     // append the token to your requests:
     //  .set('Authorization', user.token);
-    
-    it('VERB to /api/route [with context]', async () => {
-      
-      // remove this line, here to not have lint error:
-      user.token;
-    
-      // expect(response.status).toBe(200);
-      // expect(response.body).toEqual(?);
-      
+
+    let chore = {
+      id: expect.any(Number),
+      task: 'Sweep and mop',
+      completed: false
+    };
+
+    it('POST /api/todos', async () => {
+
+      const response = await request
+        .post('/api/todos')
+        .set('Authorization', user.token)
+        .send(chore);
+
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual({
+        userId: user.id,
+        ...chore
+      });
+      chore = response.body;
+    });
+
+    it('GET /api/me/todos', async () => {
+
+      const response = await request.get('/api/me/todos')
+        .set('Authorization', user.token);
+
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual([chore]);
+    });
+
+    it('PUT /api/todos/:id', async () => {
+      chore.completed = true;
+
+      const response = await request
+        .put(`/api/todos/${chore.id}`)
+        .set('Authorization', user.token)
+        .send(chore);
+
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual(chore);
+    });
+
+    it('DELETE /api/todos/:id', async () => {
+      //delete specific item
+      const response = await request
+        .delete(`/api/todos/${chore.id}`)
+        .set('Authorization', user.token);
+
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual(chore);
+
+      //make sure it's gone
+      const getResponse = await request.get('/api/me/todos')
+        .set('Authorization', user.token);
+
+      expect(getResponse.status).toBe(200);
+      expect(getResponse.body.find(item => item.id === chore.id)).toBeUndefined();
     });
 
   });
